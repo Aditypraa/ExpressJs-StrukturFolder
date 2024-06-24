@@ -7,7 +7,6 @@ const usersRouter = require("./routes/users");
 //IMPORT Middleware
 const middlewareLogReq = require("./middleware/logs");
 const upload = require("./middleware/multer");
-const e = require("express");
 
 //INITIALIZE Variable
 const app = express();
