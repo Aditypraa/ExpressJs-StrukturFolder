@@ -2,11 +2,12 @@ require("dotenv").config();
 const express = require("express");
 
 //IMPORT Router
-const usersRouter = require("./routes/users");
+const usersRouter = require("./routes/usersRoute");
+const imageRouter = require("./routes/imagesRoute");
 
 //IMPORT Middleware
-const middlewareLogReq = require("./middleware/logs");
-const upload = require("./middleware/multer");
+const middlewareLogReq = require("./middleware/logsMiddleware");
+const uploadErrorHandler = require("./middleware/uploadErrorHandlerMiddleware");
 
 //INITIALIZE Variable
 const app = express();
@@ -19,19 +20,10 @@ app.use("/assets", express.static("public/images"));
 
 //ROUTER
 app.use("/users", usersRouter);
+app.use("/upload", imageRouter);
 
+app.use(uploadErrorHandler);
 //Upload Image
-app.post("/upload", upload.single("photo"), (req, res) => {
-  res.status(200).json({ message: "Success Upload Image", data: req.file });
-});
-
-app.use((err, req, res, next) => {
-  if (err.code === "LIMIT_FILE_SIZE") {
-    res.status(400).json({ message: "File to large" });
-    return;
-  }
-  res.status(500).json({ message: "Internal Server Error" });
-});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
